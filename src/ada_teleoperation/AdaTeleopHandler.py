@@ -4,7 +4,8 @@ import time
 import copy
 
 from input_handlers.UserInputListener import UserInputData
-from input_handlers import KinovaJoystickListener, HydraListener, MouseJoystickListener
+from input_handlers import KinovaJoystickListener, MouseJoystickListener
+#from input_handlers import HydraListener
 #from HydraListener import *
 from RobotState import *
 from DataRecordingUtils import *
@@ -22,8 +23,6 @@ kinova_joy_interface_name = 'kinova'
 hydra_interface_name = 'hydra'
 
 possible_teleop_interface_names = [mouse_interface_name, kinova_joy_interface_name, hydra_interface_name]
-
-
 
 def Is_Done_Func_Default(*args):
   return False
@@ -88,13 +87,11 @@ class AdaTeleopHandler:
   def GetEndEffectorTransform(self):
     return self.manip.GetEndEffectorTransform()
 
-
   def ExecuteAction(self, action):
     self.robot_state.mode = self.robot_state.mode_after_action(action)
     #self.robot_state = self.robot_state.state_after_action(action)
     self.execute_twist(action.twist)
     self.execute_finger_velocities(action.finger_vel)
-
 
   # NOTE: twist is stacked [cartesian angular]
   def execute_twist(self, twist):

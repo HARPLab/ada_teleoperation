@@ -4,7 +4,9 @@ import numpy as np
 from input_handlers.UserInputListener import UserInputData
 #from HydraListener import *
 from RobotState import *
-from input_handlers import KinovaJoystickListener, HydraListener, MouseJoystickListener, UserInputListener
+from input_handlers import KinovaJoystickListener, MouseJoystickListener, UserInputListener
+#from input_handlers import HydraListener
+#from input_handlers import HydraListener
 
 finger_weighting = 0.2
 

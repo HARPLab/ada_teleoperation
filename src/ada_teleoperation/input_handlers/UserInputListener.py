@@ -63,8 +63,6 @@ class UserInputListener(object):
 
     data.buttons_held = np.array( [1 if press and (curr_time - press_start_time > time_required_button_hold) else 0 for press,press_start_time in zip(data.buttons, self.time_since_press)] )
 
-
-
     #self.time_since_press = [ curr_time if change > 0.5 else 0 for last_time,press,change in zip(self.time_since_press, data.buttons, data.button_changes)]
 
     #set the change between the last buttons held returned as data
