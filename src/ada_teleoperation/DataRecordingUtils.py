@@ -167,13 +167,15 @@ def stop_rosbag(rosbag_process):
 
 
 def terminate_process_and_children(p):
-  children = psutil.Process(p.pid).get_children(recursive=True)
-  for child_p in children:
-    child_p.send_signal(signal.SIGINT)
-  p.send_signal(subprocess.signal.SIGINT)
+  proc = psutil.Process(p.pid)
+  if proc is not None:
+    children = proc.children(recursive=True)
+    for child_p in children:
+      child_p.send_signal(signal.SIGINT)
+    p.send_signal(subprocess.signal.SIGINT)
 
 #maintain the data for each time step
-#class TrajectoryData_PerTimeStep(object):
+#class TrajectoryData_PerTimeStep(object):t 
 #  def __init__(self, *args, **kwargs):
 #    if len(args) > 0:
 #      logger.warning('Attempting to save trajectory item with unspecified key. Please specify a key for all arguments')

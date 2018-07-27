@@ -78,7 +78,9 @@ class AdaTeleopHandler:
 
 
   def Init_Robot(self):
+    print('SIM? {}'.format(self.sim))
     if not self.sim:
+      print('Calling switch to teleop')
       self.robot.SwitchToTeleopController()
 
     #set the robot state we keep track of
