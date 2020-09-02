@@ -4,8 +4,38 @@ import time
 import copy
 
 from input_handlers.UserInputListener import UserInputData
-from input_handlers import KinovaJoystickListener, HydraListener, MouseJoystickListener
-#from HydraListener import *
+
+
+mouse_interface_name = 'mouse'
+kinova_joy_interface_name = 'kinova'
+hydra_interface_name = 'hydra'
+
+possible_teleop_interface_names = []
+
+try:
+    from input_handlers import KinovaJoystickListener
+    possible_teleop_interface_names.append(kinova_joy_interface_name)
+except ImportError as ex:
+    def KinovaJoystickListener():
+        raise RuntimeError("Requested import of disabled {} [import error: {}]".format(
+            'KinovaJoystickListener', ex))
+
+try:
+    from input_handlers import HydraListener
+    possible_teleop_interface_names.append(hydra_interface_name)
+except ImportError:
+    def HydraListener():
+        raise RuntimeError("Requested import of disabled {} [import error: {}]".format(
+            'HydraListener', ex))
+
+try:
+    from input_handlers import MouseJoystickListener
+    possible_teleop_interface_names.append(mouse_interface_name)
+except ImportError:
+    def MouseJoystickListener():
+        raise RuntimeError("Requested import of disabled {} [import error: {}]".format(
+            'MouseJoystickListener', ex))
+
 from RobotState import *
 from DataRecordingUtils import *
 from UserInputMapper import UserInputMapper
@@ -18,12 +48,6 @@ from prpy.util import GeodesicTwist
  
 
 CONTROL_HZ = 50.
-
-mouse_interface_name = 'mouse'
-kinova_joy_interface_name = 'kinova'
-hydra_interface_name = 'hydra'
-
-possible_teleop_interface_names = [mouse_interface_name, kinova_joy_interface_name, hydra_interface_name]
 
 
 
