@@ -55,7 +55,7 @@ def Is_Done_Func_Default(*args):
   return False
 
 def Is_Done_Func_Button_Hold(env, robot, user_input):
-  return user_input.buttons_held[0]
+  return user_input is not None and user_input.buttons_held[0]
   #if user_input.
 
 
@@ -102,6 +102,9 @@ class AdaTeleopHandler:
       self.user_input_mapper = UserInputMapper(interface_listener=self.joystick_listener, num_motion_modes=self.num_motion_modes, num_finger_modes=num_finger_modes)
 
       self.Init_Robot()
+
+  def get_user_command(self):
+      return self.joystick_listener.get_most_recent_cmd()
 
 
   def Init_Robot(self):
