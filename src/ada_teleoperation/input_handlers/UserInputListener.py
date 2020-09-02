@@ -37,9 +37,8 @@ class UserInputListener(object):
 
   #TODO handle case of no most_recent_message without infinite loop
   def get_most_recent_cmd(self):
-    while self.most_recent_message is None:
-      print 'Error: No user input to return'
-      time.sleep(0.02)
+    if self.most_recent_message is None:
+      raise RuntimeError('no message available yet')
 
     with self.inputlock:
       data = self.message_to_data(self.most_recent_message)
