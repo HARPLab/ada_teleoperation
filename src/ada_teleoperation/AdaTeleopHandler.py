@@ -50,7 +50,6 @@ from prpy.util import GeodesicTwist
 CONTROL_HZ = 50.
 
 
-
 def Is_Done_Func_Default(*args):
   return False
 
@@ -108,7 +107,9 @@ class AdaTeleopHandler:
 
 
   def Init_Robot(self):
+    print('SIM? {}'.format(self.sim))
     if not self.sim:
+      print('Calling switch to teleop')
       self.robot.SwitchToTeleopController()
 
     #set the robot state we keep track of
@@ -116,7 +117,6 @@ class AdaTeleopHandler:
 
   def GetEndEffectorTransform(self):
     return self.manip.GetEndEffectorTransform()
-
 
   def ExecuteAction(self, action):
     self.robot_state.mode = self.robot_state.mode_after_action(action)
