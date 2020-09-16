@@ -106,3 +106,15 @@ class UserInputData(object):
 
   def __str__(self):
     return 'axes: ' + str(self.axes) + '  buttons: ' + str(self.buttons)  + '  button changes: ' + str(self.button_changes) + '  buttons_held: ' + str(self.buttons_held) + '  button_held_changes: ' + str(self.button_held_changes)
+
+  def as_dict(self):
+      """
+      Return a dict() representation of all of the data of this class. Useful for logging.
+      """
+      return { 
+          'axes': self.axes, 
+          'buttons': self.buttons, 
+          'button_changes': self.button_changes,
+          'buttons_held': self.buttons_held,
+          'button_held_changes': self.button_held_changes
+    }

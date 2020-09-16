@@ -53,6 +53,16 @@ class RobotState(object):
   def num_finger_dofs(self):
     return len(finger_dofs)
 
+  def as_dict(self):
+      """
+      Return a dict() representation of all of the data of this class. Useful for logging.
+      """
+      return { 
+          'ee_trans': self.ee_trans.tolist(), 
+          'finger_dofs': self.finger_dofs.tolist(), 
+          'mode': self.mode
+    }
+
 #actions we can enact on the state
 #corresponds to a mode switch and a twist
 
@@ -101,6 +111,16 @@ class Action(object):
     
   def __str__(self):
     return 'twist:' + str(self.twist) + ' finger:' + str(self.finger_vel) + ' mode to:' + str(self.switch_mode_to)
+
+  def as_dict(self):
+      """
+      Return a dict() representation of all of the data of this class. Useful for logging.
+      """
+      return { 
+          'twist': self.twist.tolist(), 
+          'finger_vel': self.finger_vel.tolist(), 
+          'mode_switch': self.switch_mode_to
+    }
 
   @staticmethod
   def set_no_finger_vel(num_finger_dofs):
