@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import copy
-from pynput.keyboard import Key, Listener
+from pynput.keyboard import Key, KeyCode, Listener
 import rospy
 import threading
 
@@ -43,18 +43,24 @@ class KeyState:
         with self._lock:
             return copy.deepcopy(self._state)
 
-KEYS_USED = { Key.right, Key.left, Key.up, Key.down, Key.space }
+KEYS_UP = { Key.up, KeyCode.from_char('w') }
+KEYS_DOWN = { Key.down, KeyCode.from_char('s') }
+KEYS_LEFT = { Key.left, KeyCode.from_char('a') }
+KEYS_RIGHT = { Key.right, KeyCode.from_char('d') }
+KEYS_BUTTON = { Key.space }
+
+KEYS_USED = KEYS_UP | KEYS_DOWN | KEYS_LEFT | KEYS_RIGHT | KEYS_BUTTON
 def get_message_from_key_state(state):
-    x_axis = 1.*state.get(Key.right, 0.) - 1.*state.get(Key.left, 0.)
-    y_axis = 1.*state.get(Key.up, 0.) - 1.*state.get(Key.down, 0.)
-    button = state.get(Key.space, 0)
+    x_axis = any(state[k] for k in KEYS_RIGHT) - any(state[k] for k in KEYS_LEFT)
+    y_axis = any(state[k] for k in KEYS_UP) - any(state[k] for k in KEYS_DOWN)
+    button = any(state[k] for k in KEYS_BUTTON)
     return Joy(
-        axes = [x_axis, y_axis],
+        axes = [x_axis, -y_axis, 0.],
         buttons = [button]
     )
 
 def main():
-    rospy.init_node('key_to_joystick', anonymous=True)
+    rospy.init_node('keyboard_to_joystick', anonymous=True)
 
     key_state = KeyState(KEYS_USED)
     listener = Listener(
