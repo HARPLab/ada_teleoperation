@@ -26,13 +26,13 @@ class KeyState:
                 self._state[key] = True
     
     def on_released(self, key):
-        if self.key_filt is None:
+        if self._key_filt is None:
             with self._lock:
                 if key in self._state:
                     del(self._state[key])
                 else:
                     print('warning: released key {} but not marked as pressed'.format(key))
-        elif key in self.key_filt:
+        elif key in self._key_filt:
             with self._lock:
                 if not self._state[key]:
                     print('warning: released key {} but not marked as pressed'.format(key))
@@ -57,7 +57,7 @@ def main():
     rospy.init_node('key_to_joystick', anonymous=True)
 
     key_state = KeyState(KEYS_USED)
-    listener = keyboard.Listener(
+    listener = Listener(
         on_press=key_state.on_pressed,
         on_release=key_state.on_released)  
     listener.start()
@@ -70,6 +70,7 @@ def main():
     pub_rate = rospy.get_param('pub_rate', 100.)
     timer = rospy.Timer(rospy.Duration(1./pub_rate), publish_msg)
 
+    print('Ready')
     rospy.spin()
 
     # clean up
