@@ -59,7 +59,7 @@ def Is_Done_Func_Button_Hold(env, robot, user_input):
 
 
 class AdaTeleopHandler:
-  def __init__(self, env, robot, teleop_interface, num_input_dofs, use_finger_mode=True):
+  def __init__(self, env, robot, teleop_interface, input_profile):
 #      self.params = {'rand_start_radius':0.04,
 #             'noise_pwr': 0.3,  # magnitude of noise
 #             'vel_scale': 4.,   # scaling when sending velocity commands to robot
@@ -75,14 +75,6 @@ class AdaTeleopHandler:
       num_finger_dofs = len(self.hand.GetIndices())
       Action.set_no_finger_vel(num_finger_dofs)
 
-      #number of different modes used for motion is related to how many dofs of input we have
-      if num_input_dofs == 2:
-        self.num_motion_modes = 3
-      elif num_input_dofs == 3:
-        self.num_motion_modes = 2
-      else:
-        raise Exception('Number of input dofs being used must be 2 or 3')
-
       #select which input device we will be using
       self.teleop_interface = teleop_interface
       if teleop_interface == mouse_interface_name:
@@ -94,11 +86,7 @@ class AdaTeleopHandler:
       else:
         raise Exception('Teleop interface not specified. Please specify one of: ' + str(possible_teleop_interface_names))
        
-      if use_finger_mode:
-          num_finger_modes = 1
-      else:
-          num_finger_modes = 0
-      self.user_input_mapper = UserInputMapper(interface_listener=self.joystick_listener, num_motion_modes=self.num_motion_modes, num_finger_modes=num_finger_modes)
+      self.user_input_mapper = UserInputMapper(input_profile)
 
       self.Init_Robot()
 
@@ -113,7 +101,7 @@ class AdaTeleopHandler:
       self.robot.SwitchToTeleopController()
 
     #set the robot state we keep track of
-    self.robot_state = RobotState(self.GetEndEffectorTransform(), self.hand.GetDOFValues(), num_modes=self.user_input_mapper.num_motion_modes + self.user_input_mapper.num_finger_modes)
+    self.robot_state = RobotState(self.GetEndEffectorTransform(), self.hand.GetDOFValues(), num_modes=self.user_input_mapper.num_modes)
 
   def GetEndEffectorTransform(self):
     return self.manip.GetEndEffectorTransform()
